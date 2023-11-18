@@ -29,10 +29,11 @@ void *wrlog(void *data) // writer
    char str[MAX_LOG_LENGTH];
    int id = *(int*) data;
    usleep(20);
-   sprintf(str, "%d", id);
+   sprintf(str,"%d", id);
    strcpy(logbuf[count], str);
    /* Only increase count to size MAX_BUFFER_SLOT*/
    count = (count > MAX_BUFFER_SLOT) ? count : count + 1;
+   if(count == MAX_BUFFER_SLOT) sem_post(&readers);
    pthread_mutex_unlock(&mtx);
    return 0;
 }
@@ -42,6 +43,7 @@ void flushlog() // reader
    int i;
    char nullval[MAX_LOG_LENGTH];
    // mutex_lock
+   sem_wait(&readers); 
    pthread_mutex_lock(&mtx);
    for (i = 0; i < count; i++)
    {
