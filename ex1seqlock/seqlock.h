@@ -26,14 +26,6 @@ static inline void pthread_seqlock_init(pthread_seqlock_t *rw)
    rw->sequence = 0;
    rw->writer_waiting = 0;
 }
-// static inline void pthread_rwlock_destroy(pthread_seqlock_t *rw ){
-//    pthread_mutex_destroy(&rw->mutex);
-//    pthread_cond_destroy(&rw->writers);
-//    pthread_cond_destroy(&rw->readers);
-//    rw->data = 0;
-//    rw->sequence = 0;
-//    rw->writer_waiting = 0;
-// }
 // Writer lock
 static inline void pthread_seqlock_wrlock(pthread_seqlock_t *rw)
 {
@@ -46,7 +38,7 @@ static inline void pthread_seqlock_wrlock(pthread_seqlock_t *rw)
    rw->sequence++;
    rw->writer_waiting = 0;
    rw->writer_count++;
-   printf("Writer in \n ");
+   printf("Writer in \n");
    pthread_mutex_unlock(&rw->mutex);
 }
 // Writer unlock
@@ -57,7 +49,7 @@ static inline void pthread_seqlock_wrunlock(pthread_seqlock_t *rw)
    rw->writer_count--;
    rw->sequence++;
    printf("Writer out \n");
-   pthread_cond_broadcast(&rw->db); // like signal
+   pthread_cond_broadcast(&rw->db); 
    pthread_mutex_unlock(&rw->mutex);
 }
 // Reader lock
